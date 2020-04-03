@@ -1,0 +1,7 @@
+{
+    "variants": {
+        "axis=y":    { "model": "esther:block/ancient_log" },
+        "axis=z":     { "model": "esther:block/ancient_log", "x": 90 },
+        "axis=x":     { "model": "esther:block/ancient_log", "x": 90, "y": 90 }
+    }
+}
