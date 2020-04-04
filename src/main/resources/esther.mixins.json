@@ -4,12 +4,16 @@
   "package": "dev.hephaestus.esther.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "ExplosiveProjectileEntityMixin",
     "ServerPlayNetworkHandlerMixin",
+    "ServerPlayerEntityMixin",
     "PlayerEntityMixin",
-    "BiomeArrayMixin"
+    "BiomeArrayMixin",
+    "WorldMixin"
   ],
   "client": [
-    "InGameHudMixin"
+    "InGameHudMixin",
+    "PlayerEntityRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

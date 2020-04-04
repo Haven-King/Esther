@@ -21,7 +21,7 @@ public class Fireball extends Spell {
         float g = -MathHelper.sin(player.pitch * 0.017453292F);
         float h = MathHelper.cos(player.yaw * 0.017453292F) * MathHelper.cos(player.pitch * 0.017453292F);
         player.world.playLevelEvent(null, 1016, new BlockPos(player), 0);
-        FireballEntity fireballEntity = new FireballEntity(player.world, player.getX(), player.getY(), player.getZ(), f, g, h);
+        FireballEntity fireballEntity = new FireballEntity(player.world, player, f, g, h);
         fireballEntity.explosionPower = 1 + player.experienceLevel / 15;
         fireballEntity.updatePosition(player.getX() + vec3d.x, player.getBodyY(0.5D) + 0.25D, player.getZ() + vec3d.z);
         player.world.spawnEntity(fireballEntity);

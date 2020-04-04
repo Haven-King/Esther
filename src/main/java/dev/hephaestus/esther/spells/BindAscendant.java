@@ -3,15 +3,10 @@ package dev.hephaestus.esther.spells;
 import dev.hephaestus.esther.Esther;
 import dev.hephaestus.esther.EstherDimensions;
 import dev.hephaestus.esther.block.ShrineBlockBottom;
-import dev.hephaestus.esther.items.AscendantItem;
 import dev.hephaestus.esther.util.ImprintManager;
-import dev.hephaestus.esther.util.ManaManager;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 

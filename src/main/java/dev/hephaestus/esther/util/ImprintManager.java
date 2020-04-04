@@ -56,7 +56,7 @@ public class ImprintManager extends PersistentState {
 
     @Nullable
     public Imprint getClosestImprint(BlockPos pos) {
-            return imprints.getOrDefault(Math.max(pos.getX() / 1000, imprints.size() - 1), null);
+        return imprints.getOrDefault(Math.max(pos.getX() / 1000, imprints.size() - 1), null);
     }
 
     @Override

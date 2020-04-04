@@ -2,63 +2,49 @@ package dev.hephaestus.esther.mixin;
 
 import com.mojang.authlib.GameProfile;
 import dev.hephaestus.esther.Esther;
-import dev.hephaestus.esther.util.ManaManager;
-import dev.hephaestus.esther.util.ManaUser;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import dev.hephaestus.esther.EstherDimensions;
+import dev.hephaestus.esther.util.ImprintManager;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.Packet;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.network.ServerPlayerInteractionManager;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ServerPlayerEntity.class)
 public abstract class ServerPlayerEntityMixin extends PlayerEntity {
-    @Shadow public abstract ServerWorld getServerWorld();
-
     public ServerPlayerEntityMixin(World world, GameProfile profile) {
         super(world, profile);
     }
 
     @Inject(method = "wakeUp", at = @At("TAIL"))
     public void wakeUpHook(boolean bl, boolean bl2, CallbackInfo ci) {
-        Esther.debug("We woke!");
-        ((ManaUser) this).resetMana();
-        Esther.debug("" + ((ManaUser)this).getManaLevel());
-//        ManaManager.getInstance(this.getServerWorld()).resetMana(this.getServerWorld().getServer().getPlayerManager().getPlayer(this.uuid));
+        Esther.COMPONENT.get(this).resetMana();
     }
-//
-//    @Inject(method = "createSpawnPacket", at = @At("HEAD"))
-//    public void updateMana(CallbackInfoReturnable<Packet<?>> cir) {
-//        ManaManager.getInstance(this.getServerWorld()).resetMana(this.getServerWorld().getServer().getPlayerManager().getPlayer(this.uuid));
-//    }
 
-    @Inject(method = "addExperienceLevels", at = @At("TAIL"))
-    public void resetMana(int levels, CallbackInfo ci) {
-        ((ManaUser) this).resetMana();
-//        ManaManager.getInstance(this.getServerWorld()).resetMana(this.getServerWorld().getServer().getPlayerManager().getPlayer(this.uuid));
+    @Inject(method = "onDeath", at = @At(value = "HEAD"), cancellable = true)
+    public void onDeathDont(DamageSource source, CallbackInfo ci) {
+        ServerPlayerEntity player = ((ServerPlayerEntity)(Object)this);
+        if (player.dimension == EstherDimensions.IMPRINT) {
+            BlockPos pos = ImprintManager.getInstance(player.getServerWorld()).getClosestImprint(player.getBlockPos()).getCenter();
+            player.requestTeleport(pos.getX(), pos.getY(), pos.getZ());
+            player.setHealth(1);
+            ci.cancel();
+        }
     }
-//
-//    @Inject(method = "tick", at = @At("TAIL"))
-//    private void whatIsMana(CallbackInfo ci) {
-//        Esther.debug("" + ((ManaUser)this).getManaLevel());
-//    }
 
-
-
-//    @Environment(EnvType.SERVER)
-//    @Inject(method = "<init>", at = @At("TAIL"))
-//    public void initInjection(MinecraftServer server, ServerWorld world, GameProfile profile, ServerPlayerInteractionManager interactionManager, CallbackInfo ci) {
-//        ManaManager.getInstance(this.getServerWorld()).update((ServerPlayerEntity)(Object)this);
-//    }
+    @Inject(method = "tick", at = @At(value = "TAIL"))
+    public void blazesDontLikeWaterMan(CallbackInfo ci) {
+        if (this.touchingWater && Esther.COMPONENT.get(this).canFly()) {
+            Esther.COMPONENT.get(this).setCanFly(false);
+            this.playSound(SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.AMBIENT, 1.0f, 0.0f);
+        }
+    }
 
     @Override
     public boolean isSpectator() {

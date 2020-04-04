@@ -21,6 +21,7 @@
       "dev.hephaestus.esther.Esther"
     ],
     "client": [
+      "dev.hephaestus.esther.ClientInitializer"
     ]
   },
   "mixins": [

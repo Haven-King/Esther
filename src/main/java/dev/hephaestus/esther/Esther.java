@@ -4,7 +4,7 @@ import dev.hephaestus.esther.block.SpaceBlock;
 import dev.hephaestus.esther.features.ShrineFeature;
 import dev.hephaestus.esther.items.AscendantItem;
 import dev.hephaestus.esther.spells.*;
-import dev.hephaestus.esther.util.ManaComponent;
+import dev.hephaestus.esther.util.EstherComponent;
 import nerdhub.cardinal.components.api.ComponentRegistry;
 import nerdhub.cardinal.components.api.ComponentType;
 import nerdhub.cardinal.components.api.event.EntityComponentCallback;
@@ -19,6 +19,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -35,7 +36,9 @@ public class Esther implements ModInitializer {
 
 	public static final SpellRegistry SPELLS = new SpellRegistry();
 
-	public static final Block SPACE = new SpaceBlock(FabricBlockSettings.of(Material.GLASS).nonOpaque().strength(-1.0F, 3600000.0F).build());
+	public static final Block SPACE = new SpaceBlock(FabricBlockSettings.of(Material.GLASS).nonOpaque().strength(-1.0F, 3600000.0F).sounds(
+			new BlockSoundGroup(-1000.0F, 1.0F, SoundEvents.BLOCK_STONE_BREAK, SoundEvents.BLOCK_STONE_STEP, SoundEvents.BLOCK_STONE_PLACE, SoundEvents.BLOCK_STONE_HIT, SoundEvents.BLOCK_STONE_FALL)
+	).build());
 
 	public static final ItemGroup ITEM_GROUP = FabricItemGroupBuilder.create(
 			newID("general"))
@@ -44,8 +47,8 @@ public class Esther implements ModInitializer {
 
 	public static final Item ASCENDANT = new AscendantItem(new Item.Settings().group(ITEM_GROUP).maxCount(1));
 
-	public static final ComponentType<ManaComponent> MANA =
-			ComponentRegistry.INSTANCE.registerIfAbsent(newID("mana"), ManaComponent.class);
+	public static final ComponentType<EstherComponent> COMPONENT =
+			ComponentRegistry.INSTANCE.registerIfAbsent(newID("component"), EstherComponent.class);
 
 	@Override
 	public void onInitialize() {
@@ -66,12 +69,13 @@ public class Esther implements ModInitializer {
 
 		SPELLS.register(new StartFire(newID("star_fire"), Spell.Difficulty.TRIVIAL, 1), "ignus");
 
-		SPELLS.register(new Venom(newID("venom"), Spell.Difficulty.MODERATE, 10), "ostium");
+		SPELLS.register(new Flight(newID("flight"), Spell.Difficulty.HARD, 15), "igni mihi caelum").withSound(SoundEvents.ENTITY_BLAZE_AMBIENT);
+		SPELLS.register(new Descend(newID("descend"), Spell.Difficulty.TRIVIAL, 0), "descendit").withSound(SoundEvents.ENTITY_BLAZE_DEATH);
 
 		EntityComponentCallback.event(PlayerEntity.class).register((player, components) ->
-				components.put(MANA, new ManaComponent(player)));
+				components.put(COMPONENT, new EstherComponent(player)));
 
-		EntityComponents.setRespawnCopyStrategy(MANA, RespawnCopyStrategy.NEVER_COPY);
+		EntityComponents.setRespawnCopyStrategy(COMPONENT, RespawnCopyStrategy.NEVER_COPY);
 	}
 
 	public static void log(String msg) {

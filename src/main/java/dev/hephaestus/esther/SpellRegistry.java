@@ -1,6 +1,7 @@
-package dev.hephaestus.esther.spells;
+package dev.hephaestus.esther;
 
 import dev.hephaestus.esther.Esther;
+import dev.hephaestus.esther.spells.Spell;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
@@ -11,7 +12,7 @@ public class SpellRegistry {
     private HashMap<String, Spell> registeredIncantations = new HashMap<>();
     private HashMap<Identifier, Spell> registeredSpells = new HashMap<>();
 
-    public SpellRegistry() {};
+    public SpellRegistry() {}
 
     public Spell register(Spell spell, String incantation) {
         Esther.log("Registered " + spell.getId() + " with incantation \"" + incantation + "\"");
