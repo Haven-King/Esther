@@ -85,10 +85,10 @@ publishing {
 	repositories {
 		maven {
 			name = "GithubPackages"
-			url "https://maven.pkg.github.com/Hephaestus-Dev"
+			url "https://maven.pkg.github.com/Hephaestus-Dev/Esther"
 			credentials {
-				username = System.getenv("github.actor")
-				password = System.getenv("secrets.GITHUB_TOKEN")
+				username = "Hephaestus-Dev"
+				password = System.getenv("GITHUB_TOKEN")
 			}
 		}
 	}
