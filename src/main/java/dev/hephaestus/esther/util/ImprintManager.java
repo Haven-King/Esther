@@ -4,7 +4,6 @@ import dev.hephaestus.esther.Esther;
 import dev.hephaestus.esther.EstherDimensions;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import jdk.internal.jline.internal.Nullable;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Pair;
@@ -54,7 +53,6 @@ public class ImprintManager extends PersistentState {
         return imprints.get(id);
     }
 
-    @Nullable
     public Imprint getClosestImprint(BlockPos pos) {
         return imprints.getOrDefault(Math.max(pos.getX() / 1000, imprints.size() - 1), null);
     }
