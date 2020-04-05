@@ -15,6 +15,10 @@ repositories {
 		name = "Onyx Studios"
 		url = "https://maven.onyxstudios.dev"
 	}
+	maven {
+		name = "Github"
+		url = "https://maven.pkg.github.com/Hephaestus-Dev"
+	}
 }
 
 dependencies {
@@ -81,7 +85,13 @@ publishing {
 
 	// select the repositories you want to publish to
 	repositories {
-		// uncomment to publish to the local maven
-		// mavenLocal()
+		maven {
+			name = "GithubPackages"
+			url "https://maven.pkg.github.com/Hephaestus-Dev"
+			credentials {
+				username = System.getenv("github.actor")
+				password = System.getenv("secrets.GITHUB_TOKEN")
+			}
+		}
 	}
 }
