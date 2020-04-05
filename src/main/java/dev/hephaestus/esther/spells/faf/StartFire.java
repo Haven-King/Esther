@@ -1,5 +1,6 @@
-package dev.hephaestus.esther.spells;
+package dev.hephaestus.esther.spells.faf;
 
+import dev.hephaestus.esther.spells.Spell;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.FireBlock;
@@ -19,12 +20,14 @@ public class StartFire extends Spell {
     }
 
     @Override
-    void cast(ServerPlayerEntity player) {
+    public void cast(ServerPlayerEntity player) {
         EntityHitResult hitEntity = Spell.traceForEntity(player, 6);
+        BlockHitResult hitBlock = Spell.traceForBlock(player, 6);
         if (hitEntity != null && hitEntity.getEntity() instanceof LivingEntity) {
+            super.cast(player);
             hitEntity.getEntity().setOnFireFor(5);
-        } else {
-            BlockHitResult hitBlock = Spell.traceForBlock(player, 6);
+        } else if (hitBlock != null) {
+            super.cast(player);
 
             BlockPos pos = hitBlock.getBlockPos();
             BlockState state = player.world.getBlockState(pos);

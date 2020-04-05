@@ -1,4 +1,4 @@
-package dev.hephaestus.esther.spells;
+package dev.hephaestus.esther.client;
 
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.model.ModelPart;

@@ -1,6 +1,7 @@
-package dev.hephaestus.esther.spells;
+package dev.hephaestus.esther.spells.faf;
 
 import dev.hephaestus.esther.Esther;
+import dev.hephaestus.esther.spells.Spell;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.FireballEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -15,7 +16,8 @@ public class Fireball extends Spell {
     }
 
     @Override
-    void cast(ServerPlayerEntity player) {
+    public void cast(ServerPlayerEntity player) {
+        super.cast(player);
         Vec3d vec3d = player.getRotationVec(1.0F);
         float f = -MathHelper.sin(player.yaw * 0.017453292F) * MathHelper.cos(player.pitch * 0.017453292F);
         float g = -MathHelper.sin(player.pitch * 0.017453292F);

@@ -1,6 +1,7 @@
-package dev.hephaestus.esther.spells;
+package dev.hephaestus.esther.client;
 
 import dev.hephaestus.esther.Esther;
+import dev.hephaestus.esther.spells.aura.Aura;
 import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumer;
@@ -23,7 +24,7 @@ public class FlightRodsFeatureRenderer<T extends LivingEntity, M extends EntityM
     }
 
     public void render(MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int light, T livingEntity, float f, float g, float h, float j, float k, float l) {
-        if (Esther.COMPONENT.get(livingEntity).canFly()) {
+        if (Esther.COMPONENT.get(livingEntity).isActive((Aura) Esther.FLIGHT)) {
             matrixStack.push();
             matrixStack.translate(-0.0725, 0.0D, 0.0D);
             this.getContextModel().copyStateTo(this.rodsModel);

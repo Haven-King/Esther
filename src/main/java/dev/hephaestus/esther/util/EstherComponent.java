@@ -1,20 +1,18 @@
 package dev.hephaestus.esther.util;
 
 import dev.hephaestus.esther.Esther;
+import dev.hephaestus.esther.spells.aura.Aura;
 import nerdhub.cardinal.components.api.ComponentType;
 import nerdhub.cardinal.components.api.component.Component;
 import nerdhub.cardinal.components.api.util.sync.EntitySyncedComponent;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.world.GameMode;
-import org.apache.logging.log4j.core.jmx.Server;
+import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.HashMap;
+import java.util.Map;
 
 interface IntComponent extends Component {
     int getMana();
@@ -23,15 +21,10 @@ interface IntComponent extends Component {
     void resetMana();
 }
 
-interface BoolComponent extends Component {
-    boolean canFly();
-    void setCanFly(boolean active);
-}
-
-public class EstherComponent implements IntComponent, BoolComponent, EntitySyncedComponent {
+public class EstherComponent implements IntComponent, EntitySyncedComponent {
     private int value = 0;
-    private boolean flying = false;
     private PlayerEntity player;
+    private Map<Identifier, Boolean> aura = new HashMap<>();
 
     public EstherComponent(PlayerEntity player) {
         this.player = player;
@@ -55,20 +48,55 @@ public class EstherComponent implements IntComponent, BoolComponent, EntitySynce
 
     @Override
     public void resetMana() {
-        this.setMana(player.experienceLevel - (this.flying ? 15 : 0));
+        int using = 0;
+        for (Map.Entry<Identifier, Boolean> entry : this.aura.entrySet()) {
+            if (entry.getValue()) {
+                using += Esther.SPELLS.get(entry.getKey()).getCost();
+            }
+        }
+
+        setMana(player.experienceLevel - using);
+    }
+
+    public void regainMana() {
+        int using = 0;
+        for (Map.Entry<Identifier, Boolean> entry : this.aura.entrySet()) {
+            if (entry.getValue()) {
+                using += Esther.SPELLS.get(entry.getKey()).getCost();
+            }
+        }
+
+        setMana(Integer.min(value + 1, player.experienceLevel - using));
     }
 
     @Override
     public void fromTag(CompoundTag tag) {
         this.setMana(tag.getInt(Esther.MOD_ID + "_mana"));
-        this.setCanFly(tag.getBoolean(Esther.MOD_ID + "_flying"));
+
+        CompoundTag aura = tag.getCompound(Esther.MOD_ID + "_aura");
+
+        for (Aura a : Esther.SPELLS.getRegisteredAura()) {
+            this.aura.put(a.getId(), false);
+        }
+
+        for (String t : aura.getKeys()) {
+            this.aura.put(new Identifier(t), aura.getBoolean(t));
+        }
     }
 
     @NotNull
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         tag.putInt(Esther.MOD_ID + "_mana", this.value);
-        tag.putBoolean(Esther.MOD_ID + "_flying", this.flying);
+
+        CompoundTag aura = new CompoundTag();
+
+        for (Map.Entry<Identifier, Boolean> entry : this.aura.entrySet()) {
+            aura.putBoolean(entry.getKey().toString(), entry.getValue());
+        }
+
+        tag.put(Esther.MOD_ID + "_aura", aura);
+
         return tag;
     }
 
@@ -84,24 +112,26 @@ public class EstherComponent implements IntComponent, BoolComponent, EntitySynce
         return Esther.COMPONENT;
     }
 
-    @Override
-    public boolean canFly() {
-        return this.flying;
+    public boolean isActive(Identifier id) {
+        return this.aura.getOrDefault(id, false);
+    }
+    public boolean isActive(Aura aura) {return isActive(aura.getId());}
+
+    public void activate(Identifier id) {
+        aura.put(id, true);
+        this.sync();
     }
 
-    @Override
-    public void setCanFly(boolean active) {
-        this.flying = active;
+    public void activate(Aura aura) {
+        activate(aura.getId());
+    }
 
-        if (player instanceof ServerPlayerEntity && !player.isCreative()) {
-            player.abilities.allowFlying = active;
-            if (!active) player.abilities.flying = false;
-        } else if (player instanceof ClientPlayerEntity && MinecraftClient.getInstance().interactionManager.getCurrentGameMode() != GameMode.CREATIVE) {
-            player.abilities.allowFlying = active;
-            if (!active) player.abilities.flying = false;
-        }
-
-        player.sendAbilitiesUpdate();
+    public void deactivate(Identifier id) {
+        aura.put(id, false);
         this.sync();
+    }
+
+    public void deactivate(Aura aura) {
+        deactivate(aura.getId());
     }
 }

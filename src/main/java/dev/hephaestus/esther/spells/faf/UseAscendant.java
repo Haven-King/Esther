@@ -1,7 +1,8 @@
-package dev.hephaestus.esther.spells;
+package dev.hephaestus.esther.spells.faf;
 
 import dev.hephaestus.esther.Esther;
 import dev.hephaestus.esther.items.AscendantItem;
+import dev.hephaestus.esther.spells.Spell;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
@@ -13,6 +14,7 @@ public class UseAscendant extends Spell {
 
     @Override
     public void cast(ServerPlayerEntity player) {
+        super.cast(player);
         try {
             AscendantItem.teleport(player, player.getStackInHand(player.getActiveHand()).getSubTag(Esther.MOD_ID));
         } catch (NullPointerException e) {

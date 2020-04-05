@@ -1,4 +1,4 @@
-package dev.hephaestus.esther.mixin;
+package dev.hephaestus.esther.mixin.client;
 
 import dev.hephaestus.esther.Esther;
 import net.minecraft.client.MinecraftClient;

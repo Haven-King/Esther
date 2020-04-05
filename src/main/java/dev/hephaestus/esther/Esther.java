@@ -4,6 +4,12 @@ import dev.hephaestus.esther.block.SpaceBlock;
 import dev.hephaestus.esther.features.ShrineFeature;
 import dev.hephaestus.esther.items.AscendantItem;
 import dev.hephaestus.esther.spells.*;
+import dev.hephaestus.esther.spells.aura.Flight;
+import dev.hephaestus.esther.spells.aura.EffectAura;
+import dev.hephaestus.esther.spells.faf.BindAscendant;
+import dev.hephaestus.esther.spells.faf.Fireball;
+import dev.hephaestus.esther.spells.faf.StartFire;
+import dev.hephaestus.esther.spells.faf.UseAscendant;
 import dev.hephaestus.esther.util.EstherComponent;
 import nerdhub.cardinal.components.api.ComponentRegistry;
 import nerdhub.cardinal.components.api.ComponentType;
@@ -15,14 +21,15 @@ import net.fabricmc.fabric.api.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.block.Material;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.Biomes;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,7 +41,20 @@ public class Esther implements ModInitializer {
 
 	public static final Identifier UPDATE_MANA_PACKET_ID = newID("mana");
 
-	public static final SpellRegistry SPELLS = new SpellRegistry();
+	public static final Registry SPELLS = new Registry();
+	public static Spell BIND_ASCENDANT = SPELLS.register(new BindAscendant(Esther.newID("bind_ascendant"), Spell.Difficulty.HARD, 30), "sanguinem filio, sanguinem effurgarex perpetuum").withSound(SoundEvents.BLOCK_END_PORTAL_FRAME_FILL);
+	public static Spell USE_ASCENDANT = SPELLS.register(new UseAscendant(Esther.newID("use_ascendant"), Spell.Difficulty.MODERATE, 15), "Sangima Maerma, Bernos Asescenda");
+	public static Spell FIREBALL = SPELLS.register(new Fireball(Esther.newID("fireball"), Spell.Difficulty.EASY, 5), "crepitus");
+	public static Spell START_FIRE = SPELLS.register(new StartFire(Esther.newID("star_fire"), Spell.Difficulty.TRIVIAL, 1), "ignus");
+
+	public static Spell FLIGHT = SPELLS.register(new Flight(Esther.newID("flight"), Spell.Difficulty.HARD, 25, new ItemStack(Items.BLAZE_ROD, 12)), "igni mihi caelum", "descendit");
+
+	public static Spell HASTE = SPELLS.register(new EffectAura(Esther.newID("haste"), Spell.Difficulty.MODERATE, 10, StatusEffects.HASTE, new ItemStack(Items.SUGAR, 3)), "celeritas", "se tardum");
+	public static Spell HASTE_II = SPELLS.register(new EffectAura(Esther.newID("haste"), Spell.Difficulty.MODERATE, 20, StatusEffects.HASTE, new ItemStack(Items.HONEY_BOTTLE, 1)), "citius", "se tardum");
+	public static Spell HASTE_III = SPELLS.register(new EffectAura(Esther.newID("haste"), Spell.Difficulty.HARD, 30, StatusEffects.HASTE, new ItemStack(Items.FEATHER, 5)), "summa celeritate", "se tardum");
+
+	public static Spell WATER_BREATHING = SPELLS.register(new EffectAura(Esther.newID("water_breathing"), Spell.Difficulty.EASY, 10, StatusEffects.WATER_BREATHING, new ItemStack(Items.TROPICAL_FISH_BUCKET, 1)), "respirare me aquae", "respirare me aere");
+
 
 	public static final Block SPACE = new SpaceBlock(FabricBlockSettings.of(Material.GLASS).nonOpaque().strength(-1.0F, 3600000.0F).sounds(
 			new BlockSoundGroup(-1000.0F, 1.0F, SoundEvents.BLOCK_STONE_BREAK, SoundEvents.BLOCK_STONE_STEP, SoundEvents.BLOCK_STONE_PLACE, SoundEvents.BLOCK_STONE_HIT, SoundEvents.BLOCK_STONE_FALL)
@@ -50,27 +70,19 @@ public class Esther implements ModInitializer {
 	public static final ComponentType<EstherComponent> COMPONENT =
 			ComponentRegistry.INSTANCE.registerIfAbsent(newID("component"), EstherComponent.class);
 
+	static {
+		SPELLS.register(Esther.newID("use_ascendant"), "Sangina Mearma, Ascendarum Cavea");
+		SPELLS.register(Esther.newID("use_ascendant"), "Sangiema Meam Et Nos Mundo Carcerema");
+	}
+
 	@Override
 	public void onInitialize() {
-		Registry.register(Registry.BLOCK, newID("space"), SPACE);
-		Registry.register(Registry.ITEM, newID("ascendant"), ASCENDANT);
+		net.minecraft.util.registry.Registry.register(net.minecraft.util.registry.Registry.BLOCK, newID("space"), SPACE);
+		net.minecraft.util.registry.Registry.register(net.minecraft.util.registry.Registry.ITEM, newID("ascendant"), ASCENDANT);
 
 		ShrineFeature.create(Biomes.FOREST);
 		ShrineFeature.create(Biomes.DESERT);
 		EstherDimensions.init();
-
-
-		SPELLS.register(new BindAscendant(newID("bind_ascendant"), Spell.Difficulty.HARD, 30), "sanguinem filio, sanguinem effurgarex perpetuum").withSound(SoundEvents.BLOCK_END_PORTAL_FRAME_FILL);
-		SPELLS.register(new UseAscendant(newID("use_ascendant"), Spell.Difficulty.MODERATE, 15), "Sangima Maerma, Bernos Asescenda");
-		SPELLS.register(newID("use_ascendant"), "Sangina Mearma, Ascendarum Cavea");
-		SPELLS.register(newID("use_ascendant"), "Sangiema Meam Et Nos Mundo Carcerema");
-
-		SPELLS.register(new Fireball(newID("fireball"), Spell.Difficulty.EASY, 5), "crepitus");
-
-		SPELLS.register(new StartFire(newID("star_fire"), Spell.Difficulty.TRIVIAL, 1), "ignus");
-
-		SPELLS.register(new Flight(newID("flight"), Spell.Difficulty.HARD, 15), "igni mihi caelum").withSound(SoundEvents.ENTITY_BLAZE_AMBIENT);
-		SPELLS.register(new Descend(newID("descend"), Spell.Difficulty.TRIVIAL, 0), "descendit").withSound(SoundEvents.ENTITY_BLAZE_DEATH);
 
 		EntityComponentCallback.event(PlayerEntity.class).register((player, components) ->
 				components.put(COMPONENT, new EstherComponent(player)));

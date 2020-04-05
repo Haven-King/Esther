@@ -12,8 +12,8 @@
     "WorldMixin"
   ],
   "client": [
-    "InGameHudMixin",
-    "PlayerEntityRendererMixin"
+    "client.InGameHudMixin",
+    "client.PlayerEntityRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

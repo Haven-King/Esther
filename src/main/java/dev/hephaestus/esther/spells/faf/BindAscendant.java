@@ -1,8 +1,9 @@
-package dev.hephaestus.esther.spells;
+package dev.hephaestus.esther.spells.faf;
 
 import dev.hephaestus.esther.Esther;
 import dev.hephaestus.esther.EstherDimensions;
 import dev.hephaestus.esther.block.ShrineBlockBottom;
+import dev.hephaestus.esther.spells.Spell;
 import dev.hephaestus.esther.util.ImprintManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -17,6 +18,7 @@ public class BindAscendant extends Spell {
 
     @Override
     public void cast(ServerPlayerEntity player) {
+
         ServerWorld world = player.getServerWorld();
         ItemStack ascendant = player.getStackInHand(player.getActiveHand());
 
@@ -36,6 +38,8 @@ public class BindAscendant extends Spell {
             }
 
             if (shrineNearby) {
+                super.cast(player);
+
                 ImprintManager.Imprint imprint = ImprintManager.getInstance(world).getNextImprint();
 
                 imprint.update(

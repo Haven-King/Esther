@@ -1,6 +1,7 @@
 package dev.hephaestus.esther.mixin;
 
 import dev.hephaestus.esther.Esther;
+import dev.hephaestus.esther.spells.aura.Aura;
 import dev.hephaestus.esther.spells.Spell;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -24,19 +25,17 @@ public class ServerPlayNetworkHandlerMixin {
         String string = packet.getChatMessage();
         Spell spell = Esther.SPELLS.get(string).getValue();
 
-        if (spell != null) {
-            spell.castIfCapable(player);
-        }
+        if (spell != null && spell.canCast(player)) spell.cast(player);
     }
 
     @Inject(method = "onDisconnected", at = @At("HEAD"))
     public void disconnect(Text reason, CallbackInfo ci) {
-        Esther.COMPONENT.get(this.player).setCanFly(false);
+        Esther.COMPONENT.get(this.player).deactivate((Aura) Esther.FLIGHT);
         player.inventory.insertStack(new ItemStack(Items.BLAZE_ROD, 12));
     }
 
     @Inject(method = "tick()V", at = @At("HEAD"))
     public void dontFloatMan(CallbackInfo ci) {
-        if (Esther.COMPONENT.get(player).canFly()) this.floating = false;
+        if (Esther.COMPONENT.get(player).isActive((Aura) Esther.FLIGHT)) this.floating = false;
     }
 }

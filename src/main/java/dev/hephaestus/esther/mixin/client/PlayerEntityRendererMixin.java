@@ -1,6 +1,6 @@
-package dev.hephaestus.esther.mixin;
+package dev.hephaestus.esther.mixin.client;
 
-import dev.hephaestus.esther.spells.FlightRodsFeatureRenderer;
+import dev.hephaestus.esther.client.FlightRodsFeatureRenderer;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.LivingEntityRenderer;

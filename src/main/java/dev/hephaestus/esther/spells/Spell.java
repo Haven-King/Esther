@@ -3,9 +3,7 @@ package dev.hephaestus.esther.spells;
 import dev.hephaestus.esther.Esther;
 import net.minecraft.entity.ProjectileUtil;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
@@ -23,7 +21,7 @@ public abstract class Spell {
     }
 
     private final Difficulty difficulty;
-    private final Identifier id;
+    protected final Identifier id;
     protected final int cost;
     private SoundEvent sound;
 
@@ -33,30 +31,24 @@ public abstract class Spell {
         this.cost = cost;
     }
 
-    abstract void cast(ServerPlayerEntity player);
+    public void cast(ServerPlayerEntity player) {
+        Esther.COMPONENT.get(player).useMana(this.cost);
+    }
+
+    protected void fail(ServerPlayerEntity player) {
+        Esther.log(player.getName().asString() + " failed to cast " + id);
+        switch(this.difficulty) {
+            // TODO: Add drawbacks for failed spell casts
+        }
+    }
 
     public boolean canCast(ServerPlayerEntity player) {
         return Esther.COMPONENT.get(player).getMana() >= this.cost;
     }
 
-    public ActionResult castIfCapable(ServerPlayerEntity player) {
-        if (canCast(player)) {
-            Esther.log(player.getName().asString() + " cast " + id);
-            Esther.COMPONENT.get(player).useMana(this.cost);
-            if (this.sound != null) player.playSound(sound, SoundCategory.AMBIENT, 1.0f, 0.0f);
-            this.cast(player);
-            return ActionResult.SUCCESS;
-        } else {
-            Esther.log(player.getName().asString() + " tried to cast " + id);
-            switch(this.difficulty) {
-                // TODO: Add drawbacks for failed spell casts
-            }
-            return ActionResult.PASS;
-        }
-    }
-
-    public void withSound(SoundEvent sound) {
+    public Spell withSound(SoundEvent sound) {
         this.sound = sound;
+        return this;
     }
 
     public Identifier getId() {
@@ -91,5 +83,9 @@ public abstract class Spell {
                 player.getCameraEntity().getBoundingBox().stretch(vec3d2.multiply(range)).expand(1.0D),
                 (entity) -> !entity.isSpectator() && entity.isAlive() && entity.collides()
         );
+    }
+
+    public int getCost() {
+        return cost;
     }
 }

@@ -3,6 +3,7 @@ package dev.hephaestus.esther.mixin;
 import com.mojang.authlib.GameProfile;
 import dev.hephaestus.esther.Esther;
 import dev.hephaestus.esther.EstherDimensions;
+import dev.hephaestus.esther.spells.aura.Aura;
 import dev.hephaestus.esther.util.ImprintManager;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
@@ -40,9 +41,19 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity {
 
     @Inject(method = "tick", at = @At(value = "TAIL"))
     public void blazesDontLikeWaterMan(CallbackInfo ci) {
-        if (this.touchingWater && Esther.COMPONENT.get(this).canFly()) {
-            Esther.COMPONENT.get(this).setCanFly(false);
+        if (this.touchingWater && Esther.COMPONENT.get(this).isActive((Aura) Esther.FLIGHT)) {
+            Esther.COMPONENT.get(this).deactivate((Aura) Esther.FLIGHT);
             this.playSound(SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.AMBIENT, 1.0f, 0.0f);
+        }
+
+        if (this.world.getTime() % 80L == 0L) {
+            for (Aura a : Esther.SPELLS.getRegisteredAura()) {
+                if (Esther.COMPONENT.get(this).isActive(a.getId())) a.apply((ServerPlayerEntity)(Object)this);
+            }
+        }
+
+        if (this.world.getTime() % 200L == 0L) {
+            Esther.COMPONENT.get(this).regainMana();
         }
     }
 
