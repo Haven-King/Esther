@@ -12,10 +12,8 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldView;
 import net.minecraft.world.biome.Biome;
 
-import javax.annotation.Nullable;
 import java.util.Objects;
 
 public class ShrineBlockBottom extends Block {
@@ -40,7 +38,7 @@ public class ShrineBlockBottom extends Block {
     }
 
     @Override
-    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
+    public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack) {
         super.onPlaced(world, pos, state, placer, itemStack);
         world.setBlockState(pos.up(), Registry.BLOCK.get(Esther.newID(Objects.requireNonNull(Registry.BIOME.getId(biome)).getPath() + "_shrine_top")).getDefaultState());
     }

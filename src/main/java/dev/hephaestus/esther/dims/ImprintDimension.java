@@ -16,7 +16,6 @@ import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.chunk.ChunkGeneratorConfig;
 
-import javax.annotation.Nullable;
 
 public class ImprintDimension extends Dimension {
     private static float[] backgroundColor = {1.0f, 1.0f, 1.0f,1.0f};
@@ -33,13 +32,11 @@ public class ImprintDimension extends Dimension {
         return EstherDimensions.EMPTY_CHUNK_GENERATOR.create(this.world, BiomeSourceType.FIXED.applyConfig(biomeConfig), chunkGeneratorConfig);
     }
 
-    @Nullable
     @Override
     public BlockPos getSpawningBlockInChunk(ChunkPos chunkPos, boolean checkMobSpawnValidity) {
         return null;
     }
 
-    @Nullable
     @Override
     public BlockPos getTopSpawningBlockPosition(int x, int z, boolean checkMobSpawnValidity) {
         return null;
@@ -52,7 +49,6 @@ public class ImprintDimension extends Dimension {
         return (float)(d * 2.0D + e) / 3.0F;
     }
 
-    @Nullable
     @Override
     @Environment(EnvType.CLIENT)
     public float[] getBackgroundColor(float skyAngle, float tickDelta) {
