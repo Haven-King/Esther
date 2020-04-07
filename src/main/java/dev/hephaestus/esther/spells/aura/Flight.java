@@ -25,7 +25,7 @@ public class Flight extends EffectAura {
     protected void deactivate(ServerPlayerEntity player) {
         super.deactivate(player);
 
-        if (!player.isCreative()) {
+        if (!player.isCreative() && !player.isSpectator()) {
             player.abilities.allowFlying = false;
             player.abilities.flying = false;
             player.sendAbilitiesUpdate();

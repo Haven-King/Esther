@@ -88,7 +88,7 @@ public class ShrineFeature extends Feature<ShrineFeatureConfig> {
         biome.addFeature(
             GenerationStep.Feature.SURFACE_STRUCTURES,
             shrine.configure(new ShrineFeatureConfig(biome)).createDecoratedFeature(Decorator.CHANCE_HEIGHTMAP.configure(new ChanceDecoratorConfig(
-                    Esther.DEBUG ? 50 : 500
+                50
             )))
         );
     }

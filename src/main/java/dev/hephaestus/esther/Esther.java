@@ -39,15 +39,13 @@ public class Esther implements ModInitializer {
 	public static final Logger LOGGER = LogManager.getLogger();
 	public static final boolean DEBUG = false;
 
-	public static final Identifier UPDATE_MANA_PACKET_ID = newID("mana");
-
 	public static final Registry SPELLS = new Registry();
 	public static Spell BIND_ASCENDANT = SPELLS.register(new BindAscendant(Esther.newID("bind_ascendant"), Spell.Difficulty.HARD, 30), "sanguinem filio, sanguinem effurgarex perpetuum").withSound(SoundEvents.BLOCK_END_PORTAL_FRAME_FILL);
 	public static Spell USE_ASCENDANT = SPELLS.register(new UseAscendant(Esther.newID("use_ascendant"), Spell.Difficulty.MODERATE, 15), "Sangima Maerma, Bernos Asescenda");
 	public static Spell FIREBALL = SPELLS.register(new Fireball(Esther.newID("fireball"), Spell.Difficulty.EASY, 5), "crepitus");
 	public static Spell START_FIRE = SPELLS.register(new StartFire(Esther.newID("star_fire"), Spell.Difficulty.TRIVIAL, 1), "ignus");
 
-	public static Spell FLIGHT = SPELLS.register(new Flight(Esther.newID("flight"), Spell.Difficulty.HARD, 25, new ItemStack(Items.BLAZE_ROD, 12)), "igni mihi caelum", "descendit");
+	public static Spell FLIGHT = SPELLS.register(new Flight(Esther.newID("flight"), Spell.Difficulty.HARD, 35, new ItemStack(Items.BLAZE_ROD, 12)), "igni mihi caelum", "descendit");
 
 	public static Spell HASTE = SPELLS.register(new EffectAura(Esther.newID("haste"), Spell.Difficulty.MODERATE, 10, StatusEffects.HASTE, new ItemStack(Items.SUGAR, 3)), "celeritas", "se tardum");
 	public static Spell HASTE_II = SPELLS.register(new EffectAura(Esther.newID("haste"), Spell.Difficulty.MODERATE, 20, StatusEffects.HASTE, new ItemStack(Items.HONEY_BOTTLE, 1)), "citius", "se tardum");
