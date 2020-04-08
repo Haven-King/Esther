@@ -30,8 +30,10 @@ public class ServerPlayNetworkHandlerMixin {
 
     @Inject(method = "onDisconnected", at = @At("HEAD"))
     public void disconnect(Text reason, CallbackInfo ci) {
-        Esther.COMPONENT.get(this.player).deactivate((Aura) Esther.FLIGHT);
-        player.inventory.insertStack(new ItemStack(Items.BLAZE_ROD, 12));
+        if (Esther.COMPONENT.get(this.player).isActive((Aura) Esther.FLIGHT)) {
+            player.inventory.insertStack(new ItemStack(Items.BLAZE_ROD, 12));
+            Esther.COMPONENT.get(this.player).deactivate((Aura) Esther.FLIGHT);
+        }
     }
 
     @Inject(method = "tick()V", at = @At("HEAD"))
