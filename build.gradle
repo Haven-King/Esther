@@ -19,6 +19,10 @@ repositories {
 		name = "Github"
 		url = "https://maven.pkg.github.com/Hephaestus-Dev"
 	}
+	maven {
+		name = "Ladysnake Libs"
+		url = 'https://dl.bintray.com/ladysnake/libs'
+	}
 }
 
 dependencies {
@@ -31,6 +35,8 @@ dependencies {
 	modImplementation "com.github.NerdHubMC.Cardinal-Components-API:cardinal-components-entity:${project.cardinal_version}"
 	include "com.github.NerdHubMC.Cardinal-Components-API:cardinal-components-base:${project.cardinal_version}"
 	include "com.github.NerdHubMC.Cardinal-Components-API:cardinal-components-entity:${project.cardinal_version}"
+	modImplementation "io.github.ladysnake:PlayerAbilityLib:${pal_version}"
+	include "io.github.ladysnake:PlayerAbilityLib:${pal_version}"
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
     implementation 'org.jetbrains:annotations:15.0'
 }

@@ -1,5 +1,7 @@
 package dev.hephaestus.esther.spells.aura;
 
+import dev.hephaestus.esther.Esther;
+import io.github.ladysnake.pal.VanillaAbilities;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -15,20 +17,17 @@ public class Flight extends EffectAura {
     protected void activate(ServerPlayerEntity player) {
         super.activate(player);
 
-        player.abilities.allowFlying = true;
+        Esther.FLIGHT_SPELL.grantTo(player, VanillaAbilities.ALLOW_FLYING);
 
         player.playSound(SoundEvents.ENTITY_BLAZE_AMBIENT, 1.0f, 0.0f);
-        player.sendAbilitiesUpdate();
     }
 
     @Override
     protected void deactivate(ServerPlayerEntity player) {
         super.deactivate(player);
 
-        if (!player.isCreative() && !player.isSpectator()) {
-            player.abilities.allowFlying = false;
-            player.abilities.flying = false;
-            player.sendAbilitiesUpdate();
+        if (Esther.FLIGHT_SPELL.grants(player, VanillaAbilities.ALLOW_FLYING)) {
+            Esther.FLIGHT_SPELL.revokeFrom(player, VanillaAbilities.ALLOW_FLYING);
         }
 
         player.playSound(SoundEvents.ENTITY_BLAZE_DEATH, 1.0f, 0.0f);

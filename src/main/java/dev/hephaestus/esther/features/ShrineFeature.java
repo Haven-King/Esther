@@ -62,32 +62,34 @@ public class ShrineFeature extends Feature<ShrineFeatureConfig> {
         return false;
     }
 
-    public static void create(Biome biome) {
+    public static void create(Biome biome, String name) {
         Esther.log("Registering new shrine for biome " + Registry.BIOME.getId(biome));
 
         String biome_path = Objects.requireNonNull(Registry.BIOME.getId(biome)).getPath();
 
-        Block bottomBlock = Registry.register(
-            Registry.BLOCK,
-            Esther.newID(biome_path + "_shrine_bottom"),
-            new ShrineBlockBottom(FabricBlockSettings.of(Material.STONE).strength(0.5f, 1.0f).nonOpaque().sounds(BlockSoundGroup.STONE).build(), biome)
-        );
+        if (!Registry.BLOCK.getOrEmpty(Esther.newID(name + "_shrine_bottom")).isPresent()) {
+            Block bottomBlock = Registry.register(
+                    Registry.BLOCK,
+                    Esther.newID(name + "_shrine_bottom"),
+                    new ShrineBlockBottom(FabricBlockSettings.of(Material.STONE).strength(0.5f, 1.0f).nonOpaque().sounds(BlockSoundGroup.STONE).build(), biome)
+            );
 
-        if (Esther.DEBUG) {
-            Registry.register(Registry.ITEM, Esther.newID(biome_path + "_shrine"), new BlockItem(bottomBlock, new Item.Settings().group(Esther.ITEM_GROUP)));
+            if (Esther.DEBUG) {
+                Registry.register(Registry.ITEM, Esther.newID(name + "_shrine"), new BlockItem(bottomBlock, new Item.Settings().group(Esther.ITEM_GROUP)));
+            }
+
+            Registry.register(Registry.BLOCK,
+                    Esther.newID(name + "_shrine_top"),
+                    new ShrineBlockTop(FabricBlockSettings.of(Material.STONE).strength(0.5f, 1.0f).nonOpaque().sounds(BlockSoundGroup.STONE).build())
+            );
         }
-
-        Registry.register(Registry.BLOCK,
-            Esther.newID(biome_path + "_shrine_top"),
-            new ShrineBlockTop(FabricBlockSettings.of(Material.STONE).strength(0.5f, 1.0f).nonOpaque().sounds(BlockSoundGroup.STONE).build())
-        );
 
         ShrineFeature shrine = Registry.register(Registry.FEATURE,
             Esther.newID(biome_path + "_shrine"), new ShrineFeature(ShrineFeatureConfig::deserialize));
 
         biome.addFeature(
             GenerationStep.Feature.SURFACE_STRUCTURES,
-            shrine.configure(new ShrineFeatureConfig(biome)).createDecoratedFeature(Decorator.CHANCE_HEIGHTMAP.configure(new ChanceDecoratorConfig(
+            shrine.configure(new ShrineFeatureConfig(biome, name)).createDecoratedFeature(Decorator.CHANCE_HEIGHTMAP.configure(new ChanceDecoratorConfig(
                 50
             )))
         );

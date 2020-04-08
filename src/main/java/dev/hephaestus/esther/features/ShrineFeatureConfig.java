@@ -1,5 +1,6 @@
 package dev.hephaestus.esther.features;
 
+import com.google.common.collect.ImmutableMap;
 import com.mojang.datafixers.Dynamic;
 import com.mojang.datafixers.types.DynamicOps;
 import dev.hephaestus.esther.Esther;
@@ -15,22 +16,27 @@ public class ShrineFeatureConfig extends DefaultFeatureConfig {
     private final Block topBlock;
     private final Block bottomBlock;
     private final Biome biome;
+    private final String name;
 
-    public ShrineFeatureConfig(Biome biome) {
+    public ShrineFeatureConfig(Biome biome, String name) {
         this.biome = biome;
-        this.bottomBlock = Registry.BLOCK.get(Esther.newID(Objects.requireNonNull(Registry.BIOME.getId(biome)).getPath() + "_shrine_bottom"));
-        this.topBlock = Registry.BLOCK.get(Esther.newID(Objects.requireNonNull(Registry.BIOME.getId(biome)).getPath() + "_shrine_top"));
+        this.name = name;
+        this.bottomBlock = Registry.BLOCK.get(Esther.newID(name + "_shrine_bottom"));
+        this.topBlock = Registry.BLOCK.get(Esther.newID(name + "_shrine_top"));
     }
 
     public <T> Dynamic<T> serialize(DynamicOps<T> ops) {
-        return new Dynamic<>(ops, ops.createString(
-                Objects.requireNonNull(Registry.BIOME.getId(this.biome)).toString()
-        ));
+        com.google.common.collect.ImmutableMap.Builder<T, T> builder = ImmutableMap.builder();
+        builder.put(ops.createString("biome"), ops.createString(Objects.requireNonNull(Registry.BIOME.getId(this.biome)).toString()));
+        builder.put(ops.createString("name"), ops.createString(name));
+        Dynamic<T> dynamic = new Dynamic<>(ops, ops.createMap(builder.build()));
+        return dynamic.merge(super.serialize(ops));
     }
 
     public static <T> ShrineFeatureConfig deserialize(Dynamic<T> dynamic) {
         Biome biome = Registry.BIOME.get(new Identifier(dynamic.get("biome").toString()));
-        return new ShrineFeatureConfig(biome);
+        String name = dynamic.get("name").toString();
+        return new ShrineFeatureConfig(biome, name);
     }
 
     public Block getTopBlock() {

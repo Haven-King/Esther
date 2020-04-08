@@ -5,6 +5,7 @@ import dev.hephaestus.esther.Esther;
 import dev.hephaestus.esther.EstherDimensions;
 import dev.hephaestus.esther.spells.aura.Aura;
 import dev.hephaestus.esther.util.ImprintManager;
+import io.github.ladysnake.pal.VanillaAbilities;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -44,6 +45,9 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity {
     public void blazesDontLikeWaterMan(CallbackInfo ci) {
         if (this.touchingWater && Esther.COMPONENT.get(this).isActive((Aura) Esther.FLIGHT)) {
             Esther.COMPONENT.get(this).deactivate((Aura) Esther.FLIGHT);
+            if (Esther.FLIGHT_SPELL.grants(this, VanillaAbilities.ALLOW_FLYING)) {
+                Esther.FLIGHT_SPELL.revokeFrom(this, VanillaAbilities.ALLOW_FLYING);
+            }
             this.playSound(SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.AMBIENT, 1.0f, 0.0f);
         }
 

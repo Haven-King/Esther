@@ -11,6 +11,8 @@ import dev.hephaestus.esther.spells.faf.Fireball;
 import dev.hephaestus.esther.spells.faf.StartFire;
 import dev.hephaestus.esther.spells.faf.UseAscendant;
 import dev.hephaestus.esther.util.EstherComponent;
+import io.github.ladysnake.pal.AbilitySource;
+import io.github.ladysnake.pal.Pal;
 import nerdhub.cardinal.components.api.ComponentRegistry;
 import nerdhub.cardinal.components.api.ComponentType;
 import nerdhub.cardinal.components.api.event.EntityComponentCallback;
@@ -38,6 +40,8 @@ public class Esther implements ModInitializer {
 	public static final String MOD_ID = "esther";
 	public static final Logger LOGGER = LogManager.getLogger();
 	public static final boolean DEBUG = false;
+
+	public static final AbilitySource FLIGHT_SPELL = Pal.getAbilitySource(newID("flight"));
 
 	public static final Registry SPELLS = new Registry();
 	public static Spell BIND_ASCENDANT = SPELLS.register(new BindAscendant(Esther.newID("bind_ascendant"), Spell.Difficulty.HARD, 30), "sanguinem filio, sanguinem effurgarex perpetuum").withSound(SoundEvents.BLOCK_END_PORTAL_FRAME_FILL);
@@ -78,8 +82,28 @@ public class Esther implements ModInitializer {
 		net.minecraft.util.registry.Registry.register(net.minecraft.util.registry.Registry.BLOCK, newID("space"), SPACE);
 		net.minecraft.util.registry.Registry.register(net.minecraft.util.registry.Registry.ITEM, newID("ascendant"), ASCENDANT);
 
-		ShrineFeature.create(Biomes.FOREST);
-		ShrineFeature.create(Biomes.DESERT);
+		ShrineFeature.create(Biomes.FOREST, "mossy");
+		ShrineFeature.create(Biomes.BIRCH_FOREST, "mossy");
+		ShrineFeature.create(Biomes.BIRCH_FOREST_HILLS, "mossy");
+		ShrineFeature.create(Biomes.TALL_BIRCH_FOREST, "mossy");
+		ShrineFeature.create(Biomes.TALL_BIRCH_HILLS, "mossy");
+		ShrineFeature.create(Biomes.DARK_FOREST, "mossy");
+		ShrineFeature.create(Biomes.DARK_FOREST_HILLS, "mossy");
+		ShrineFeature.create(Biomes.PLAINS, "mossy");
+		ShrineFeature.create(Biomes.WOODED_HILLS, "mossy");
+		ShrineFeature.create(Biomes.TAIGA, "mossy");
+		ShrineFeature.create(Biomes.TAIGA_HILLS, "mossy");
+		ShrineFeature.create(Biomes.TAIGA_MOUNTAINS, "mossy");
+		ShrineFeature.create(Biomes.GIANT_SPRUCE_TAIGA, "mossy");
+		ShrineFeature.create(Biomes.GIANT_TREE_TAIGA, "mossy");
+		ShrineFeature.create(Biomes.SNOWY_TAIGA, "mossy");
+		ShrineFeature.create(Biomes.GIANT_SPRUCE_TAIGA_HILLS, "mossy");
+		ShrineFeature.create(Biomes.GIANT_TREE_TAIGA_HILLS, "mossy");
+		ShrineFeature.create(Biomes.SNOWY_TAIGA_HILLS, "mossy");
+		ShrineFeature.create(Biomes.SNOWY_TAIGA_MOUNTAINS, "mossy");
+		ShrineFeature.create(Biomes.DESERT, "sandy");
+		ShrineFeature.create(Biomes.DESERT_HILLS, "sandy");
+		ShrineFeature.create(Biomes.DESERT_LAKES, "sandy");
 		EstherDimensions.init();
 
 		EntityComponentCallback.event(PlayerEntity.class).register((player, components) ->
