@@ -3,6 +3,7 @@ package dev.hephaestus.esther.block;
 import dev.hephaestus.esther.Esther;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.entity.EntityContext;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -30,11 +31,16 @@ public class ShrineBlockBottom extends Block {
     }
 
     @Override
-    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
-        super.onBreak(world, pos, state, player);
+    public void onBlockRemoved(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+        super.onBlockRemoved(state, world, pos, newState, moved);
         if (world.getBlockState(pos.up()).getBlock() instanceof ShrineBlockTop) {
-            world.breakBlock(pos.up(), false, player);
+            world.removeBlock(pos.up(), false);
         }
+    }
+
+    @Override
+    public PistonBehavior getPistonBehavior(BlockState state) {
+        return PistonBehavior.BLOCK;
     }
 
     @Override

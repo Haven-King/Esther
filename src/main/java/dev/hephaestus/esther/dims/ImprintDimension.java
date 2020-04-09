@@ -57,7 +57,7 @@ public class ImprintDimension extends Dimension {
 
     @Override
     public boolean hasVisibleSky() {
-        return true;
+        return false;
     }
 
     @Override

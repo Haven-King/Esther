@@ -39,7 +39,7 @@ import org.apache.logging.log4j.Logger;
 public class Esther implements ModInitializer {
 	public static final String MOD_ID = "esther";
 	public static final Logger LOGGER = LogManager.getLogger();
-	public static final boolean DEBUG = false;
+	public static final boolean DEBUG = true;
 
 	public static final AbilitySource FLIGHT_SPELL = Pal.getAbilitySource(newID("flight"));
 
@@ -116,10 +116,13 @@ public class Esther implements ModInitializer {
 		LOGGER.info(String.format("[%s] %s", MOD_ID.substring(0, 1).toUpperCase() + MOD_ID.substring(1), msg));
 	}
 
-	public static void debug(String msg) {
-		if (DEBUG) LOGGER.info(String.format("[%s] %s", MOD_ID.substring(0, 1).toUpperCase() + MOD_ID.substring(1), msg));
+	protected static void debug(String msg) {
+		if (DEBUG) LOGGER.info(String.format("[%s] %s", MOD_ID, msg));
 	}
 
+	public static void debug(String format, Object... args) {
+		if (DEBUG) LOGGER.info(String.format("[%s] %s", MOD_ID, String.format(format, args)));
+	}
 	public static Identifier newID(String id) {
 		return new Identifier(MOD_ID, id);
 	}

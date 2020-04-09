@@ -43,7 +43,7 @@ public abstract class Spell {
     }
 
     public boolean canCast(ServerPlayerEntity player) {
-        return Esther.COMPONENT.get(player).getMana() >= this.cost;
+        return player.isCreative() || Esther.COMPONENT.get(player).getMana() >= this.cost;
     }
 
     public Spell withSound(SoundEvent sound) {
