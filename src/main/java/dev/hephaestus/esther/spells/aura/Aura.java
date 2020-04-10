@@ -36,6 +36,6 @@ public abstract class Aura extends Spell {
 
     @Override
     public boolean canCast(ServerPlayerEntity player) {
-        return Esther.COMPONENT.get(player).isActive(this.id) || (super.canCast(player) && canActivate(player));
+        return Esther.COMPONENT.get(player).isActive(this.id) || player.isCreative() || (super.canCast(player) && canActivate(player));
     }
 }

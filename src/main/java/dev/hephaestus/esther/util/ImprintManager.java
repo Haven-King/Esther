@@ -136,11 +136,10 @@ public class ImprintManager extends PersistentState {
                 Map<Chunk, Pair<BlockPos, Biome>> chunks = new HashMap<>();
 
                 for (int x = -radius; x <= radius; ++x) {
-                    for (int y = -radius; y <= radius; ++y) {
+                    for (int y = -radius; y <= 0; ++y) {
                         for (int z = -radius; z <= radius; ++z) {
                             BlockPos destinationPosition = center.add(x, y, z);
                             Chunk chunk = destination.getChunk(destinationPosition);
-//                            chunks.put(chunk, new Pair<>(destinationPosition, originWorld.getBiome(originPosition.add(x, y, z))));
 
                             if (destinationPosition.isWithinDistance(center, radius)) {
                                 destination.setBlockState(destinationPosition, destination.getServer().getWorld(originDimension).getBlockState(originPosition.add(x, y, z)));
@@ -150,8 +149,31 @@ public class ImprintManager extends PersistentState {
                                 assert biomeArray != null;
                                 biomeArray.setBiome(destinationPosition, originWorld.getBiome(originPosition.add(x, y, z)));
                                 chunk.setShouldSave(true);
-                            } else if (destinationPosition.isWithinDistance(center, radius + 2))
+                            } else {
                                 destination.setBlockState(destinationPosition, Esther.SPACE.getDefaultState());
+                            }
+                        }
+                    }
+                }
+
+                for (int x = -radius; x <= radius; ++x) {
+                    for (int y =0; y <= 256; ++y) {
+                        for (int z = -radius; z <= radius; ++z) {
+                            BlockPos thisCenter = center.add(0, y, 0);
+                            BlockPos destinationPosition = center.add(x, y, z);
+                            Chunk chunk = destination.getChunk(destinationPosition);
+
+                            if (destinationPosition.isWithinDistance(thisCenter, radius)) {
+                                destination.setBlockState(destinationPosition, destination.getServer().getWorld(originDimension).getBlockState(originPosition.add(x, y, z)));
+
+                                // I set the biome for every. single. block. For *some* reason, doing it once for each chunk just doesn't work.
+                                MutableBiomeArray biomeArray = MutableBiomeArray.inject(chunk.getBiomeArray());
+                                assert biomeArray != null;
+                                biomeArray.setBiome(destinationPosition, originWorld.getBiome(originPosition.add(x, y, z)));
+                                chunk.setShouldSave(true);
+                            } else {
+                                destination.setBlockState(destinationPosition, Esther.SPACE.getDefaultState());
+                            }
                         }
                     }
                 }
