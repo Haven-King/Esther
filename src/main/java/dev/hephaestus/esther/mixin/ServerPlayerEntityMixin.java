@@ -47,7 +47,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity {
         if (player.dimension == EstherDimensions.IMPRINT) {
             BlockPos pos = ImprintManager.getInstance(player.getServerWorld()).getClosestImprint(player.getBlockPos()).getCenter();
             BlockPos respawnPos = player.getServerWorld().getTopPosition(Heightmap.Type.MOTION_BLOCKING, pos);
-            player.requestTeleport(respawnPos.getX(), respawnPos.getY(), respawnPos.getZ());
+            player.requestTeleport(respawnPos.getX(), respawnPos.getY() + 1, respawnPos.getZ());
             player.setHealth(1);
             ci.cancel();
         }
