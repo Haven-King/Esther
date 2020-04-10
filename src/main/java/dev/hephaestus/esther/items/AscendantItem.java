@@ -43,15 +43,36 @@ public class AscendantItem extends Item {
     public static void teleport(ServerPlayerEntity player, CompoundTag ascendant) {
         ImprintManager.Imprint imprint = ImprintManager.getInstance(player.getServerWorld()).getImprintByID(ascendant.getInt("imprint"));
         DimensionType returnDimension = DimensionType.byId(new Identifier(ascendant.getString("return_dimension")));
-        BlockPos returnPosition = BlockPos.fromLong(ascendant.getLong("return_position"));
+        BlockPos returnPosition;
+        if (ascendant.getType("return_position") == 4) {
+            returnPosition = BlockPos.fromLong(ascendant.getLong("return_position"));
+        } else if (ascendant.getType("return_position") == 10) {
+            CompoundTag posTag = ascendant.getCompound("return_position");
+            returnPosition = new BlockPos(
+                posTag.getInt("x"),
+                posTag.getInt("y"),
+                posTag.getInt("z")
+            );
+        } else {
+            returnPosition = null;
+        }
 
-        if (player.getServerWorld().getDimension().getType() == EstherDimensions.IMPRINT && returnDimension != null) {
+
+        if (player.getServerWorld().getDimension().getType() == EstherDimensions.IMPRINT && returnDimension != null && returnPosition != null) {
             FabricDimensions.teleport(player, returnDimension, new ImprintDimensionReturner(returnPosition));
             ascendant.remove("return_dimension");
             ascendant.remove("return_position");
         } else if (player.getServerWorld().getDimension().getType() != EstherDimensions.IMPRINT && imprint != null) {
             ascendant.putString("return_dimension", player.getEntityWorld().getDimension().getType().toString());
-            ascendant.putLong("return_position", player.getBlockPos().asLong());
+
+            CompoundTag posTag = new CompoundTag();
+
+            posTag.putInt("x", player.getBlockPos().getX());
+            posTag.putInt("y", player.getBlockPos().getY());
+            posTag.putInt("z", player.getBlockPos().getZ());
+
+            ascendant.put("return_position", posTag);
+
             FabricDimensions.teleport(
                     player,
                     EstherDimensions.IMPRINT,

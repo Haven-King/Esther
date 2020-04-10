@@ -29,7 +29,14 @@ public class ImprintDimensionPlacer implements EntityPlacer {
 
         destinationPosition = imprint.getCenter();
 
-        destinationPosition = destination.getTopPosition(Heightmap.Type.MOTION_BLOCKING, destinationPosition);
+        // Because getTopPosition just doesn't work at this point
+        while (!destination.getBlockState(destinationPosition.up()).isAir()) {
+            destinationPosition = destinationPosition.up();
+        }
+
+        while (!destination.getBlockState(destinationPosition.down()).hasSolidTopSurface(destination, destinationPosition.down(), teleported)) {
+            destinationPosition = destinationPosition.down();
+        }
 
         return new BlockPattern.TeleportTarget(new Vec3d(destinationPosition), new Vec3d(0,0,0), 0);
     }

@@ -75,13 +75,22 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity {
             BlockPos pos = this.getBlockPos();
 
             int dx = pos.getX() - center.getX();
-            int dy = pos.getY() - center.getY();
             int dz = pos.getZ() - center.getZ();
 
-            BlockPos newPos = center.subtract(new BlockPos(dx, dy, dz));
+            if (dx > 150 || dx < -150) {
+                dx *= -2;
+            } else {
+                dx = 0;
+            }
 
-            if (center.getManhattanDistance(new BlockPos(pos.getX(), center.getY(), pos.getZ())) > 150) {
-                this.teleport(newPos.getX(), newPos.getY(), newPos.getZ());
+            if (dz > 150 || dz < -150) {
+                dz *= -2;
+            } else {
+                dz = 0;
+            }
+
+            if (dx != 0 && dz != 0) {
+                this.teleport(pos.getX() + dx, pos.getY(), pos.getZ() + dz);
                 this.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, new Vec3d(center));
             }
         }

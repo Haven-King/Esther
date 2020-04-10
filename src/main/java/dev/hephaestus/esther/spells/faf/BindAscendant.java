@@ -57,7 +57,7 @@ public class BindAscendant extends Spell {
 
     @Override
     public boolean canCast(ServerPlayerEntity player) {
-        return player.isCreative() || super.canCast(player) && player.getStackInHand(player.getActiveHand()).getItem() == Esther.ASCENDANT &&
+        return (player.isCreative() || super.canCast(player)) && player.getStackInHand(player.getActiveHand()).getItem() == Esther.ASCENDANT &&
             (!player.getStackInHand(player.getActiveHand()).hasTag() || !player.getStackInHand(player.getActiveHand()).getTag().contains(Esther.MOD_ID));
     }
 }

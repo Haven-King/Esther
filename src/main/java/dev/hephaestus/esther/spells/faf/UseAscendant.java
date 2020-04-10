@@ -24,7 +24,7 @@ public class UseAscendant extends Spell {
     @Override
     public boolean canCast(ServerPlayerEntity player) {
         try {
-            return player.isCreative() || super.canCast(player) &&
+            return (player.isCreative() || super.canCast(player)) &&
                     player.getStackInHand(player.getActiveHand()).getItem() == Esther.ASCENDANT &&
                     player.getStackInHand(player.getActiveHand()).getTag().contains(Esther.MOD_ID);
         } catch (NullPointerException e) {
