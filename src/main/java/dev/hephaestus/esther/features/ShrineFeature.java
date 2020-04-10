@@ -9,8 +9,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.LeavesBlock;
 import net.minecraft.block.Material;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
@@ -73,10 +71,6 @@ public class ShrineFeature extends Feature<ShrineFeatureConfig> {
                     Esther.newID(name + "_shrine_bottom"),
                     new ShrineBlockBottom(FabricBlockSettings.of(Material.STONE).strength(0.5f, 1.0f).nonOpaque().sounds(BlockSoundGroup.STONE).build(), biome)
             );
-
-            if (Esther.DEBUG) {
-                Registry.register(Registry.ITEM, Esther.newID(name + "_shrine"), new BlockItem(bottomBlock, new Item.Settings().group(Esther.ITEM_GROUP)));
-            }
 
             Registry.register(Registry.BLOCK,
                     Esther.newID(name + "_shrine_top"),

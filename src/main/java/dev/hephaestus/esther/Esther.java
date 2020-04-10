@@ -39,7 +39,7 @@ import org.apache.logging.log4j.Logger;
 public class Esther implements ModInitializer {
 	public static final String MOD_ID = "esther";
 	public static final Logger LOGGER = LogManager.getLogger();
-	public static final boolean DEBUG = true;
+	public static final boolean DEBUG = false;
 
 	public static final AbilitySource FLIGHT_SPELL = Pal.getAbilitySource(newID("flight"));
 
