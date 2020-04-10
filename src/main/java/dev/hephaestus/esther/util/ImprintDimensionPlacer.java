@@ -8,6 +8,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.Heightmap;
 
 public class ImprintDimensionPlacer implements EntityPlacer {
     private final int imprintId;
@@ -28,6 +29,7 @@ public class ImprintDimensionPlacer implements EntityPlacer {
 
         destinationPosition = imprint.getCenter();
 
+        destinationPosition = destination.getTopPosition(Heightmap.Type.MOTION_BLOCKING, destinationPosition);
 
         return new BlockPattern.TeleportTarget(new Vec3d(destinationPosition), new Vec3d(0,0,0), 0);
     }
