@@ -48,4 +48,9 @@ public class ShrineBlockBottom extends Block {
         super.onPlaced(world, pos, state, placer, itemStack);
         world.setBlockState(pos.up(), Registry.BLOCK.get(Esther.newID(Objects.requireNonNull(Registry.BIOME.getId(biome)).getPath() + "_shrine_top")).getDefaultState());
     }
+
+    @Override
+    public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
+        return ItemStack.EMPTY;
+    }
 }
